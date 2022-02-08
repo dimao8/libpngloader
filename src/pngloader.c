@@ -310,6 +310,21 @@ png_error_t EXPORT LoadPNGFormArray(const uint8_t* raw_data, size_t length, png_
     }
   free(zero_line);
 
+  // Flip
+  if (flip)
+    {
+      zero_line = (uint8_t*)malloc(bpl);
+
+      for (n = 0; n < header->height/2; n++)
+        {
+          memcpy(zero_line, *data + n*bpl, bpl);
+          memcpy(*data + n*bpl, *data + (header->height - n - 1)*bpl, bpl);
+          memcpy(*data + (header->height - n - 1)*bpl, zero_line, bpl);
+        }
+
+      free(zero_line);
+    }
+
   return PNG_ERROR_OK;
 }
 
