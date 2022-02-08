@@ -1,0 +1,3 @@
+#! /bin/sh
+
+./tests/tpngloader32 --version

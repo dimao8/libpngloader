@@ -1,0 +1,12 @@
+*.info
+txiversion.tex
+*.gz
+*.aux
+*.log
+*.out
+*.toc
+*.ind
+*.idx
+*.pdf
+*.dvi
+*.ps

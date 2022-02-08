@@ -1,0 +1,3 @@
+#! /bin/sh
+
+./tests/tpngloader24 ${srcdir}/tests/t_load24.png

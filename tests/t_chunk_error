@@ -1,0 +1,3 @@
+#! /bin/sh
+
+./tests/tpngloader_error --except=3 ${srcdir}/tests/t_chunk_error.png

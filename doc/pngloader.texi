@@ -1,0 +1,151 @@
+\input texinfo
+@c -*-texinfo-*-
+@c %**start of header
+@setfilename pngloader.info
+@settitle PNGLoader manual v0.2.0.1
+@c %**end of header
+
+@copying This manual is for pngloader, v0.2.0.1.
+
+Copyright @copyright{} 2021 Khruschev Dmitry aka DimaO.
+@end copying
+
+@titlepage
+@title PNGLoader
+@subtitle Programmer manual
+@author Khruschev Dmitry aka DimaO
+
+@c The following two commands
+@c start the copyright page.
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+
+Published by Khruschev Dmitry aka DimaO
+@end titlepage
+
+@c TOC
+@contents
+
+@ifnottex
+@node Top
+@top Common description
+
+This manual is for PNGLoader, v0.2.0.1.
+@end ifnottex
+
+@menu
+* Common description::Description of the PNGLoader library
+* Library usage::Usage of the PNGLoader library
+* Functions and types::Functions and types
+@end menu
+
+@node Common description
+@chapter Description of the PNGLoader library.
+
+@emph{PNGLoader} library is used to load PNG images from file into buffer with PNG file header. It is lite and
+OpenGL friendly rather than libPNG.
+
+Here the main features of the PNGLoader:
+
+@itemize @minus
+@item Small size of memory usage (about 35kB),
+@item Simple functioning. Except some functions like saving image to the PNG file (rather than libPNG),
+@item Possible to load PNG image from last row (useful for texture loading),
+@item Simple programming interface (only one function to call)
+@item Open permissive license, that accept usage in the commercial projects (LGPLv3).
+@end itemize
+
+Common restrictions:
+
+@itemize @minus
+@item Current version (0.2.0) works only with 8 bits per channel,
+@item Can not load palette PNG images,
+@item Skip auxiliary chunks
+@item Depend on side library (zlib)
+@end itemize
+
+@node Library usage
+@chapter Usage of the PNGLoader library.
+
+Include @code{pngloader.h} into source code to use PNGLoader library functions.
+
+@code{#include <pngloader.h>}
+
+Add to linker flags @code{-lpngloader} for static linking or @code{-lpngloader.dll} for dynamic linking.
+If dynamic linked version is used, @code{-lz} must be added to the linker flags.
+
+@node Functions and types
+@chapter Functions and types
+
+@code{png_error_t} describes PNGLoader error type. Possible values are in @ref{table:png_error_t}.
+
+@float Table,table:png_error_t
+@caption{Values of @code{png_error_t} type}
+@multitable @columnfractions 0.5 0.5
+@headitem Name @tab Description
+@item @code{PNG_NO_ERROR} @tab This value always 0 and depicts success
+@item @code{PNG_ERROR_NO_SUCH_FILE} @tab This error code depicts file access error. This value can return
+on file missing, file blocking or some other input-output troubles
+@item @code{PNG_ERROR_NOT_PNG} @tab This error code has been returned when module desided loded file not
+meet PNG specification
+@item @code{PNG_ERROR_WRONG_CHUNK_ORDER} @tab Rare error, that returned when IDAT chunk has been met before
+IHDR chunk. This situation occures when PNG file structure was misformed and size of image can not be defined
+@item @code{PNG_ERROR_MALLOC} @tab This error occures when dynamic memory can not be allocated. Usually
+this error occures when PNG header has wrong image size or other chunk has bad length field
+@item @code{PNG_ERROR_EMPTY_IMAGE} @tab This error indicates that IDAT chunk missing or empty (this is
+acceptable by PNG specification but does not make sense)
+@item @code{PNG_ERROR_NOT_SUPPORTED} @tab This error occures when PNG file format is not supported by current
+version of PNGLoader. See @ref{Common description}
+@item @code{PNG_ERROR_UNCOMPRESS} @tab This error returns when deflate stream can not be decompressed after
+load from PNG file. This error frequently occures when PNG file is corrupted
+@end multitable
+@end float
+
+@code{png_header_t} describes PNG file header. It's fields shown in @ref{table:png_header_t}.
+
+@float Table,table:png_header_t
+@caption{@code{png_header_t} structure fields}
+@multitable @columnfractions 0.25 0.25 0.5
+@headitem Name @tab Type @tab Description
+@item width @tab uint32_t @tab Width of the image (px)
+@item height @tab uint32_t @tab Height of the image (px)
+@item depth @tab uint8_t @tab Bit depth of the channel
+@item color_type @tab uint8_t @tab Image type from PNG specification
+@item compression @tab uint8_t @tab Compression type from PNG specification
+@item filter @tab uint8_t @tab Filter type from PNG specification
+@item interlace @tab uint8_t @tab Using of interlace from PNG specification
+@end multitable
+@end float
+
+@code{png_error_t LoadPNGFromFile(const char* file_name, png_header_t* header, uint8_t** data, bool flip);}
+
+@code{LoadPNGFromFile} function load PNG from @code{file_name} file into memory pointed by @code{data}.
+@code{header} variable holds content of IHDR chunk with PNG data. Image is loaded from bottom to top
+if @code{flip} is set to @code{true}. @code{LoadPNGFromFile} return error code with @code{png_error_t} type.
+
+@code{data} variable is a pointer to the pointer. Memory is allocated automatically on success. Use
+@code{FreePNG} to safely release memory.
+
+The @code{header} must point to the @code{png_header_t} allocated variable. It's content will be overwritten
+on function @code{LoadPNGFromFile} call. An undefined content will be in @code{header} on error.
+
+@code{png_error_t LoadPNGFromArray(const uint8_t* raw_data, size_t length, png_header_t* header, uint8_t** data, bool flip);}
+
+This function is the same as @code{LoadPNGFromFile} except the source of the PNG. The source for this
+function is plain array of bytes. @code{raw_data} is a pointer to PNG data in memory. @code{length} represent
+size of the memory image of the PNG.
+
+@code{void FreePNG(uint8\_t ** data);}
+
+@code{FreePNG} function safely free memory after @code{LoadPNG} was completed. This function must be called
+with @code{data} argument after successful complete of @code{LoadPNG} function if data not needed anymore.
+
+@code{void PNGLoaderVersion(char * str, size\_t n);}
+
+@code{PNGLoaderVersion} function extract module version in "N.N.N.N" form, where N is a number of version
+component. Version string will be copied into @code{str} with null symbol at the end. To prevent buffer
+overflow @code{n} argument must contain length of the buffer. Most of version strings does not exceed
+11 chars length in the buffer.
+
+@bye
