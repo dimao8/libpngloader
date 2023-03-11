@@ -29,6 +29,7 @@ doc_DATA = doc/pngloader.pdf
 
 .tex.pdf :
 	$(AM_V_GEN)$(PDFLATEX) -interaction=batchmode $< -o $@
+	$(AM_V_GEN)$(PDFLATEX) -interaction=batchmode $< -o $@
 
 CLEANFILES = *.log \
 	*.toc \
@@ -44,6 +45,7 @@ TESTS = tests/t_version \
 	tests/t_load16 \
 	tests/t_load24 \
 	tests/t_load32 \
+	tests/t_load16bpc \
 	tests/t_chunk_error \
 	tests/t_compress_error \
 	tests/t_png_error \

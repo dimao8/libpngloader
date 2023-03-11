@@ -29,7 +29,7 @@
 #define PNG_FILTER_AVERAGE  3
 #define PNG_FILTER_PAETH    4
 
-/*******************  ntohl  *******************/
+/* ********************************* ntohl ********************************* */
 
 uint32_t ntohl(uint32_t u32)
 {
@@ -43,14 +43,26 @@ uint32_t ntohl(uint32_t u32)
 #endif // defined
 }
 
-/******************  f_copy  *******************/
+/* ********************************* ntohs ********************************* */
+
+uint32_t ntohs(uint16_t u16)
+{
+#if defined(WORDS_BIGENDIAN)
+  return u16;
+#else
+  return ((u16 >> 8) & 0xFF)
+         | (u16 & 0xFF00);
+#endif // defined
+}
+
+/* ********************************* f_copy ******************************** */
 
 void f_copy(uint8_t* dst, const uint8_t* src, size_t bpl)
 {
   memcpy(dst, src, bpl);
 }
 
-/******************  f_sub  ********************/
+/* ********************************* f_sub ********************************* */
 
 void f_sub(uint8_t* dst, const uint8_t* src, size_t bpl, size_t stride)
 {
@@ -61,7 +73,7 @@ void f_sub(uint8_t* dst, const uint8_t* src, size_t bpl, size_t stride)
     dst[n] = (src[n] + dst[n - stride]) & 0xFF;
 }
 
-/*******************  f_up  ********************/
+/* ********************************** f_up ********************************* */
 
 void f_up(uint8_t* dst, const uint8_t* src, const uint8_t* prior, size_t bpl)
 {
@@ -70,7 +82,7 @@ void f_up(uint8_t* dst, const uint8_t* src, const uint8_t* prior, size_t bpl)
     dst[n] = (src[n] + prior[n]) & 0xFF;
 }
 
-/*****************  f_average  *****************/
+/* ******************************* f_average ******************************* */
 
 void f_average(uint8_t* dst, const uint8_t* src, const uint8_t* prior, size_t bpl, size_t stride)
 {
@@ -81,7 +93,7 @@ void f_average(uint8_t* dst, const uint8_t* src, const uint8_t* prior, size_t bp
     dst[n] = (src[n] + (dst[n - stride] + prior[n])/2) & 0xFF;
 }
 
-/*************  paeth_predictor  *************/
+/* **************************** paeth_predictor **************************** */
 
 uint8_t paeth_predictor(uint8_t a, uint8_t b, uint8_t c)
 {
@@ -98,7 +110,7 @@ uint8_t paeth_predictor(uint8_t a, uint8_t b, uint8_t c)
     return c;
 }
 
-/*****************  f_paeth  *****************/
+/* ******************************** f_paeth ******************************** */
 
 void f_paeth(uint8_t* dst, const uint8_t* src, const uint8_t* prior, size_t bpl, size_t stride)
 {
@@ -109,7 +121,7 @@ void f_paeth(uint8_t* dst, const uint8_t* src, const uint8_t* prior, size_t bpl,
     dst[n] = (src[n] + paeth_predictor(dst[n - stride], prior[n], prior[n - stride])) & 0xFF;
 }
 
-/**************  LoadPNGFromArray  *************/
+/* **************************** LoadPNGFromArray *************************** */
 
 png_error_t EXPORT LoadPNGFormArray(const uint8_t* raw_data, size_t length, png_header_t* header, uint8_t** data, bool flip)
 {
@@ -123,7 +135,7 @@ png_error_t EXPORT LoadPNGFormArray(const uint8_t* raw_data, size_t length, png_
   uint8_t * zero_line;
   uint32_t data_buffer_size = 0;
   uint8_t * ptr;
-  size_t bpp, bpl, n;
+  size_t bpp, bpl, n, bpc;
   uLongf destlen;
   size_t offset = 0;
 
@@ -211,30 +223,31 @@ png_error_t EXPORT LoadPNGFormArray(const uint8_t* raw_data, size_t length, png_
   if (data_buffer == 0)
     return PNG_ERROR_EMPTY_IMAGE;
 
-  if (header->color_type == PNG_COLOR_TYPE_PALETTE
-      || header->depth != 8)
+  if (header->color_type == PNG_COLOR_TYPE_PALETTE)
     {
       free(data_buffer);
       return PNG_ERROR_NOT_SUPPORTED;
     }
 
+  bpc = (header->depth + 7)/8;
+
   switch (header->color_type)
     {
 
     case PNG_COLOR_TYPE_GRAYSCALE:
-      bpp = 1;
+      bpp = bpc;
       break;
 
     case PNG_COLOR_TYPE_GRAYSCALE_ALPHA:
-      bpp = 2;
+      bpp = 2*bpc;
       break;
 
     case PNG_COLOR_TYPE_RGB:
-      bpp = 3;
+      bpp = 3*bpc;
       break;
 
     case PNG_COLOR_TYPE_RGB_ALPHA:
-      bpp = 4;
+      bpp = 4*bpc;
       break;
 
     default:
@@ -324,6 +337,24 @@ png_error_t EXPORT LoadPNGFormArray(const uint8_t* raw_data, size_t length, png_
 
       free(zero_line);
     }
+
+  // 16 bits per channel
+  if (bpc > 1)
+    {
+      for (n = 0; n < header->height*header->width*bpp/bpc; n++)
+        {
+          (*data)[n] = (ntohs(((uint16_t*)(*data))[n]) & 0xFF00) >> 8;
+        }
+      data_buffer = (uint8_t*)realloc(*data, bpl*header->height/bpc);
+      if (data_buffer != NULL)
+        *data = data_buffer;
+      else
+        {
+          free(*data);
+          return PNG_ERROR_MALLOC;
+        }
+    }
+  
 
   return PNG_ERROR_OK;
 }
