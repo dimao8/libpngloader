@@ -43,7 +43,7 @@ struct png_header_tag
 };
 
 typedef struct png_header_tag png_header_t;
-#pragma pop
+#pragma pack(pop)
 
 /**
  * \brief LoadPNGFromArray
