@@ -301,21 +301,21 @@ png_error_t EXPORT LoadPNGFormArray(const uint8_t* raw_data, size_t length, png_
           if (n == 0)
             f_up((*data) + bpl*n, ptr + (bpl + 1)*n + 1, zero_line, bpl);
           else
-            f_up((*data) + bpl*n, ptr + (bpl + 1)*n + 1, (*data) + bpl*n, bpl);
+            f_up((*data) + bpl*n, ptr + (bpl + 1)*n + 1, (*data) + bpl*(n - 1), bpl);
           break;
 
         case PNG_FILTER_AVERAGE:
           if (n == 0)
             f_average((*data) + bpl*n, ptr + (bpl + 1)*n + 1, zero_line, bpl, bpp);
           else
-            f_average((*data) + bpl*n, ptr + (bpl + 1)*n + 1, (*data) + bpl*n, bpl, bpp);
+            f_average((*data) + bpl*n, ptr + (bpl + 1)*n + 1, (*data) + bpl*(n - 1), bpl, bpp);
           break;
 
         case PNG_FILTER_PAETH:
           if (n == 0)
             f_paeth((*data) + bpl*n, ptr + (bpl + 1)*n + 1, zero_line, bpl, bpp);
           else
-            f_paeth((*data) + bpl*n, ptr + (bpl + 1)*n + 1, (*data) + bpl*n, bpl, bpp);
+            f_paeth((*data) + bpl*n, ptr + (bpl + 1)*n + 1, (*data) + bpl*(n - 1), bpl, bpp);
           break;
 
         }
