@@ -1,0 +1,10 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// Package name
+#cmakedefine PACKAGE "@PACKAGE@"
+
+// Package name
+#cmakedefine VERSION "@VERSION@"
+
+#endif // CONFIG_H
