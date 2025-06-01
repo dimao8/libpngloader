@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 project(
   libpngloader
-  VERSION 0.2.0.6
+  VERSION 0.2.0.7
   DESCRIPTION "Lite PNG loader library"
   HOMEPAGE_URL "https://gitverse.ru/DimaO87/libpngloader"
   LANGUAGES C
@@ -40,7 +40,7 @@ target_compile_definitions(
   pngloader PUBLIC
   "-DHAVE_CONFIG_H"
 )
-target_link_directories(
+target_link_libraries(
   pngloader PUBLIC
   ${ZLIB_LIBRARIES}
 )
@@ -57,7 +57,9 @@ else()
 endif()
 
 # Tests
-add_subdirectory(tests)
+if(NOT DEFINED DISABLE_TESTING)
+  add_subdirectory(tests)
+endif()
 
 # Config file
 set(PACKAGE ${PROJECT_NAME})
