@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 project(
   libpngloader
-  VERSION 0.2.0.7
+  VERSION 0.2.0.8
   DESCRIPTION "Lite PNG loader library"
   HOMEPAGE_URL "https://gitverse.ru/DimaO87/libpngloader"
   LANGUAGES C
@@ -57,8 +57,11 @@ else()
 endif()
 
 # Tests
-if(NOT DEFINED DISABLE_TESTING)
+option(DISABLE_TESTING "Disable test routine" OFF)
+if(NOT DISABLE_TESTING)
   add_subdirectory(tests)
+else()
+  message(NOTICE "Testing is disabled. ``check'' is unavailable")
 endif()
 
 # Config file
