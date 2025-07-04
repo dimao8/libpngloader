@@ -11,7 +11,7 @@ add_executable(
 target_include_directories(tpngloader8 PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(
   tpngloader8 PRIVATE
-  $<TARGET_FILE:pngloader>
+  pngloader
   ${ZLIB_LIBRARIES}
 )
 
@@ -23,7 +23,7 @@ add_executable(
 target_include_directories(tpngloader16 PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(
   tpngloader16 PRIVATE
-  $<TARGET_FILE:pngloader>
+  pngloader
   ${ZLIB_LIBRARIES}
 )
 
@@ -35,7 +35,7 @@ add_executable(
 target_include_directories(tpngloader24 PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(
   tpngloader24 PRIVATE
-  $<TARGET_FILE:pngloader>
+  pngloader
   ${ZLIB_LIBRARIES}
 )
 
@@ -47,7 +47,7 @@ add_executable(
 target_include_directories(tpngloader32 PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(
   tpngloader32 PRIVATE
-  $<TARGET_FILE:pngloader>
+  pngloader
   ${ZLIB_LIBRARIES}
 )
 
@@ -59,7 +59,7 @@ add_executable(
 target_include_directories(tpngloader_error PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(
   tpngloader_error PRIVATE
-  $<TARGET_FILE:pngloader>
+  pngloader
   ${ZLIB_LIBRARIES}
 )
 
