@@ -30,6 +30,9 @@ add_library(
   ${SOURCES}
   ${HEADERS}
 )
+add_dependencies(
+  pngloader pdf
+)
 target_include_directories(
   pngloader PUBLIC
   ${CMAKE_SOURCE_DIR}/include
@@ -81,3 +84,15 @@ file(
   COPY_ON_ERROR
   SYMBOLIC
 )
+
+install(
+  TARGETS pngloader
+  PUBLIC_HEADER
+)
+
+if(MAKEINFO)
+  install(
+    FILES ${CMAKE_BINARY_DIR}/doc/pngloader.pdf
+    TYPE DOC
+  )
+endif()
