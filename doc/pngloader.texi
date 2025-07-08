@@ -59,7 +59,6 @@ Here the main features of the PNGLoader:
 Common restrictions:
 
 @itemize @minus
-@item Current version (0.2.0) works only with 8 bits per channel,
 @item Can not load palette PNG images,
 @item Skip auxiliary chunks
 @item Depend on side library (zlib)
@@ -87,7 +86,7 @@ If dynamic linked version is used, @code{-lz} must be added to the linker flags.
 @item @code{PNG_NO_ERROR} @tab This value always 0 and depicts success
 @item @code{PNG_ERROR_NO_SUCH_FILE} @tab This error code depicts file access error. This value can return
 on file missing, file blocking or some other input-output troubles
-@item @code{PNG_ERROR_NOT_PNG} @tab This error code has been returned when module desided loded file not
+@item @code{PNG_ERROR_NOT_PNG} @tab This error code has been returned when module decided that loaded file is not
 meet PNG specification
 @item @code{PNG_ERROR_WRONG_CHUNK_ORDER} @tab Rare error, that returned when IDAT chunk has been met before
 IHDR chunk. This situation occures when PNG file structure was misformed and size of image can not be defined

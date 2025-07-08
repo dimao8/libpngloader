@@ -1,4 +1,4 @@
-#include <pngloader.h>
+#include <pngloader/pngloader.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
