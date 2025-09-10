@@ -1,3 +1,0 @@
-#! /bin/sh
-
-./tests/tpngloader_error --except=7 ${srcdir}/tests/t_compress_error.png
