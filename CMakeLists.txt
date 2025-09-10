@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.18)
 
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
-
 project(
   pngloader
-  VERSION 0.2.0.9
+  VERSION 0.2.0.10
   DESCRIPTION "Lite PNG loader library"
   HOMEPAGE_URL "https://gitverse.ru/DimaO87/libpngloader"
   LANGUAGES C
 )
+
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 set(
   SOURCES
@@ -69,15 +69,6 @@ configure_file(
   ${CMAKE_SOURCE_DIR}/config.h.in
   ${CMAKE_BINARY_DIR}/config.h
   @ONLY
-)
-
-# Copy compile_commands.json
-file(
-  CREATE_LINK
-  ${CMAKE_BINARY_DIR}/compile_commands.json
-  ${CMAKE_SOURCE_DIR}/compile_commands.json
-  COPY_ON_ERROR
-  SYMBOLIC
 )
 
 # Configuration
