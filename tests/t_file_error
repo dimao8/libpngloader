@@ -1,3 +1,0 @@
-#! /bin/sh
-
-./tests/tpngloader_error --except=1 ${srcdir}/tests/111.png

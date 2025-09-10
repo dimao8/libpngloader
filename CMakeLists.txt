@@ -5,7 +5,7 @@ include(GNUInstallDirs)
 
 project(
   pngloader
-  VERSION 0.2.0.8
+  VERSION 0.2.0.9
   DESCRIPTION "Lite PNG loader library"
   HOMEPAGE_URL "https://gitverse.ru/DimaO87/libpngloader"
   LANGUAGES C

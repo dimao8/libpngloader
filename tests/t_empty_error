@@ -1,3 +1,0 @@
-#! /bin/sh
-
-./tests/tpngloader_error --except=5 ${srcdir}/tests/t_empty_error.png
